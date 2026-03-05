@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - FreshSip</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">🍹🍦 FreshSip</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="cart-badge">
+                    <a href="cart.html">🛒 Cart</a>
+                    <span class="cart-count" id="cartCount">0</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="section-title">Checkout</h1>
+
+        <div id="checkoutContent" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <!-- Left Column: Customer Form -->
+            <div style="background: white; padding: 2rem; border-radius: 20px; box-shadow: var(--shadow);">
+                <h2 style="margin-bottom: 1.5rem; color: var(--dark);">Customer Information</h2>
+                <form id="checkoutForm">
+                    <div class="form-group">
+                        <label for="customerName">Full Name *</label>
+                        <input type="text" id="customerName" name="customerName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerEmail">Email *</label>
+                        <input type="email" id="customerEmail" name="customerEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerPhone">Phone Number *</label>
+                        <input type="tel" id="customerPhone" name="customerPhone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address *</label>
+                        <input type="text" id="address" name="address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orderType">Order Type *</label>
+                        <select id="orderType" name="orderType" required>
+                            <option value="Delivery">Delivery</option>
+                            <option value="Pickup">Pickup</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%;">
+                        Place Order 🎉
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right Column: Order Summary -->
+            <div id="orderSummarySection">
+                <!-- Will be loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- Success Modal (hidden by default) -->
+        <div id="successModal" style="display: none;">
+            <!-- Will show after successful order -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="admin.html">Admin</a>
+        </div>
+        <p>&copy; 2024 FreshSip. All rights reserved. Made with ❤️ for juice and ice cream lovers!</p>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Load order summary on page load
+        function loadOrderSummary() {
+            const cart = getCart();
+            const container = document.getElementById('orderSummarySection');
+
+            if (cart.length === 0) {
+                window.location.href = 'cart.html';
+                return;
+            }
+
+            const totals = calculateTotals();
+
+            container.innerHTML = `
+                <div class="order-summary">
+                    <h2 style="margin-bottom: 1.5rem; color: var(--dark);">Order Summary</h2>
+                    
+                    <div style="max-height: 300px; overflow-y: auto; margin-bottom: 1.5rem;">
+                        ${cart.map(item => `
+                            <div style="display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid var(--light);">
+                                <div>
+                                    <div>${item.emoji} ${item.name}</div>
+                                    <div style="color: #7f8c8d; font-size: 0.9rem;">Qty: ${item.quantity}</div>
+                                </div>
+                                <div style="font-weight: bold; color: var(--orange);">
+                                    ${formatCurrency(item.price * item.quantity)}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span>${formatCurrency(totals.subtotal)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (8%):</span>
+                        <span>${formatCurrency(totals.tax)}</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span>${formatCurrency(totals.total)}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Handle form submission
+        document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Get form data
+            const formData = new FormData(e.target);
+            const customerData = Object.fromEntries(formData.entries());
+
+            // Validate
+            if (!validateEmail(customerData.customerEmail)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            if (!validatePhone(customerData.customerPhone)) {
+                alert('Please enter a valid phone number');
+                return;
+            }
+
+            // Get cart and totals
+            const cart = getCart();
+            const totals = calculateTotals();
+            const orderNumber = generateOrderNumber();
+
+            // Prepare order data
+            const orderData = {
+                orderNumber: orderNumber,
+                customerName: customerData.customerName,
+                customerEmail: customerData.customerEmail,
+                customerPhone: customerData.customerPhone,
+                address: customerData.address,
+                city: customerData.city,
+                orderType: customerData.orderType,
+                items: JSON.stringify(cart),
+                subtotal: totals.subtotal,
+                tax: totals.tax,
+                total: totals.total,
+                status: 'Pending'
+            };
+
+            try {
+                // Submit order to API
+                const response = await fetch('tables/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (response.ok) {
+                    // Clear cart
+                    clearCart();
+
+                    // Show success message
+                    showSuccessMessage(orderNumber, totals.total);
+                } else {
+                    alert('Error placing order. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error placing order:', error);
+                alert('Error placing order. Please try again.');
+            }
+        });
+
+        function showSuccessMessage(orderNumber, total) {
+            document.getElementById('checkoutContent').style.display = 'none';
+            
+            const successModal = document.getElementById('successModal');
+            successModal.style.display = 'block';
+            successModal.innerHTML = `
+                <div class="success-message">
+                    <div class="success-icon">🎉</div>
+                    <h2>Order Placed Successfully!</h2>
+                    <p>Your order number is: <strong>${orderNumber}</strong></p>
+                    <p>Total amount: <strong>${formatCurrency(total)}</strong></p>
+                    <p>We'll prepare your order right away!</p>
+                    <p>A confirmation email will be sent to you shortly.</p>
+                    <div style="margin-top: 2rem;">
+                        <a href="index.html" class="btn">Back to Home</a>
+                        <a href="menu.html" class="btn btn-secondary" style="margin-left: 1rem;">Order More</a>
+                    </div>
+                </div>
+            `;
+
+            scrollToTop();
+        }
+
+        // Load order summary
+        loadOrderSummary();
+
+        // Responsive layout
+        function updateLayout() {
+            const content = document.getElementById('checkoutContent');
+            if (window.innerWidth <= 768) {
+                content.style.gridTemplateColumns = '1fr';
+            } else {
+                content.style.gridTemplateColumns = '1fr 1fr';
+            }
+        }
+
+        window.addEventListener('resize', updateLayout);
+        updateLayout();
+    </script>
+</body>
+</html>

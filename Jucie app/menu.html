@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - FreshSip</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">🍹🍦 FreshSip</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="cart-badge">
+                    <a href="cart.html">🛒 Cart</a>
+                    <span class="cart-count" id="cartCount">0</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="section-title">Our Menu</h1>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Search for juices or ice creams..." onkeyup="filterProducts()">
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="tab-btn active" onclick="filterByCategory('all')">All</button>
+            <button class="tab-btn" onclick="filterByCategory('juice')">🍹 Juices</button>
+            <button class="tab-btn" onclick="filterByCategory('icecream')">🍦 Ice Creams</button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="product-grid" id="productsGrid">
+            <div class="loading">Loading menu...</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="admin.html">Admin</a>
+        </div>
+        <p>&copy; 2024 FreshSip. All rights reserved. Made with ❤️ for juice and ice cream lovers!</p>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        let allProducts = [];
+        let currentCategory = 'all';
+
+        // Load all products
+        async function loadProducts() {
+            try {
+                const response = await fetch('tables/products?limit=100');
+                const data = await response.json();
+                
+                if (data.data && data.data.length > 0) {
+                    allProducts = data.data;
+                    displayProducts(allProducts);
+                } else {
+                    document.getElementById('productsGrid').innerHTML = '<p class="empty-state">No products available yet.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('productsGrid').innerHTML = '<p class="empty-state">Error loading products. Please try again later.</p>';
+            }
+        }
+
+        // Display products
+        function displayProducts(products) {
+            const container = document.getElementById('productsGrid');
+            if (products.length === 0) {
+                container.innerHTML = '<p class="empty-state">No products found.</p>';
+                return;
+            }
+
+            container.innerHTML = products.map(product => `
+                <div class="product-card" data-category="${product.category}">
+                    <span class="product-emoji">${product.emoji}</span>
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('${product.id}', '${product.name}', ${product.price}, '${product.emoji}')">
+                        Add to Cart
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Filter by category
+        function filterByCategory(category) {
+            currentCategory = category;
+            
+            // Update active tab
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter and display products
+            filterProducts();
+        }
+
+        // Filter products by search and category
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = allProducts;
+
+            // Filter by category
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(p => p.category === currentCategory);
+            }
+
+            // Filter by search term
+            if (searchTerm) {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm) || 
+                    p.description.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            displayProducts(filtered);
+        }
+
+        // Load products when page loads
+        loadProducts();
+    </script>
+</body>
+</html>

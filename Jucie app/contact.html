@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - FreshSip</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">🍹🍦 FreshSip</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="cart-badge">
+                    <a href="cart.html">🛒 Cart</a>
+                    <span class="cart-count" id="cartCount">0</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="section-title">Contact Us</h1>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;" id="contactContainer">
+            <!-- Left: Contact Form -->
+            <div style="background: white; padding: 2rem; border-radius: 20px; box-shadow: var(--shadow);">
+                <h2 style="color: var(--dark); margin-bottom: 1.5rem;">Send us a Message</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Your Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Your Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Your Message *</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%;">
+                        Send Message 📧
+                    </button>
+                </form>
+
+                <div id="formSuccess" style="display: none; margin-top: 1.5rem;">
+                    <div class="success-message">
+                        <div class="success-icon">✅</div>
+                        <h3>Message Sent Successfully!</h3>
+                        <p>We'll get back to you as soon as possible.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Contact Information -->
+            <div>
+                <div style="background: white; padding: 2rem; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 2rem;">
+                    <h2 style="color: var(--dark); margin-bottom: 1.5rem;">Business Hours</h2>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid var(--light);">
+                            <td style="padding: 1rem 0; font-weight: bold;">Monday - Friday</td>
+                            <td style="padding: 1rem 0; text-align: right; color: var(--orange);">8:00 AM - 8:00 PM</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--light);">
+                            <td style="padding: 1rem 0; font-weight: bold;">Saturday</td>
+                            <td style="padding: 1rem 0; text-align: right; color: var(--orange);">9:00 AM - 9:00 PM</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--light);">
+                            <td style="padding: 1rem 0; font-weight: bold;">Sunday</td>
+                            <td style="padding: 1rem 0; text-align: right; color: var(--orange);">10:00 AM - 7:00 PM</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="background: white; padding: 2rem; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 2rem;">
+                    <h2 style="color: var(--dark); margin-bottom: 1.5rem;">Get in Touch</h2>
+                    
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <span style="font-size: 2rem; margin-right: 1rem;">📍</span>
+                        <div>
+                            <strong style="display: block; margin-bottom: 0.3rem;">Location</strong>
+                            <p style="color: #555; margin: 0;">123 Fresh Street, Juice City, JC 12345</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <span style="font-size: 2rem; margin-right: 1rem;">📞</span>
+                        <div>
+                            <strong style="display: block; margin-bottom: 0.3rem;">Phone</strong>
+                            <p style="color: #555; margin: 0;">(555) 123-4567</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <span style="font-size: 2rem; margin-right: 1rem;">📧</span>
+                        <div>
+                            <strong style="display: block; margin-bottom: 0.3rem;">Email</strong>
+                            <p style="color: #555; margin: 0;">hello@freshsip.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, var(--green), var(--pink)); padding: 2rem; border-radius: 20px; text-align: center; color: white;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Need Quick Help?</h3>
+                    <p style="margin-bottom: 1rem;">Call us for instant support!</p>
+                    <a href="tel:5551234567" class="btn" style="background: white; color: var(--green);">
+                        📞 Call Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="admin.html">Admin</a>
+        </div>
+        <p>&copy; 2024 FreshSip. All rights reserved. Made with ❤️ for juice and ice cream lovers!</p>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Handle contact form submission
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const contactData = Object.fromEntries(formData.entries());
+
+            // Validate email
+            if (!validateEmail(contactData.email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            try {
+                // Submit to API
+                const response = await fetch('tables/contacts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(contactData)
+                });
+
+                if (response.ok) {
+                    // Show success message
+                    document.getElementById('contactForm').style.display = 'none';
+                    document.getElementById('formSuccess').style.display = 'block';
+                    
+                    // Reset after 5 seconds
+                    setTimeout(() => {
+                        document.getElementById('contactForm').reset();
+                        document.getElementById('contactForm').style.display = 'block';
+                        document.getElementById('formSuccess').style.display = 'none';
+                    }, 5000);
+                } else {
+                    alert('Error sending message. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error submitting contact form:', error);
+                alert('Error sending message. Please try again.');
+            }
+        });
+
+        // Responsive layout
+        function updateLayout() {
+            const container = document.getElementById('contactContainer');
+            if (window.innerWidth <= 768) {
+                container.style.gridTemplateColumns = '1fr';
+            } else {
+                container.style.gridTemplateColumns = '1fr 1fr';
+            }
+        }
+
+        window.addEventListener('resize', updateLayout);
+        updateLayout();
+    </script>
+</body>
+</html>

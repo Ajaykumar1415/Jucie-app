@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - FreshSip</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">🍹🍦 FreshSip</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="cart-badge">
+                    <a href="cart.html">🛒 Cart</a>
+                    <span class="cart-count" id="cartCount">0</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="section-title">Shopping Cart</h1>
+
+        <div id="cartContent">
+            <!-- Cart items will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="admin.html">Admin</a>
+        </div>
+        <p>&copy; 2024 FreshSip. All rights reserved. Made with ❤️ for juice and ice cream lovers!</p>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        function loadCart() {
+            const cart = getCart();
+            const container = document.getElementById('cartContent');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🛒</div>
+                        <h2>Your cart is empty</h2>
+                        <p>Add some delicious items from our menu!</p>
+                        <a href="menu.html" class="btn">Browse Menu</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const totals = calculateTotals();
+
+            container.innerHTML = `
+                <div class="cart-items">
+                    ${cart.map(item => `
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <div class="product-emoji">${item.emoji}</div>
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-price">${formatCurrency(item.price)}</div>
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="qty-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                                <span class="quantity">${item.quantity}</span>
+                                <button class="qty-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                            </div>
+                            <div>
+                                <div style="font-weight: bold; margin-bottom: 0.5rem;">
+                                    ${formatCurrency(item.price * item.quantity)}
+                                </div>
+                                <button class="remove-btn" onclick="removeFromCart('${item.id}')">
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="order-summary">
+                    <h2 style="margin-bottom: 1.5rem; color: var(--dark);">Order Summary</h2>
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span>${formatCurrency(totals.subtotal)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (8%):</span>
+                        <span>${formatCurrency(totals.tax)}</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span>${formatCurrency(totals.total)}</span>
+                    </div>
+                    <a href="checkout.html" class="btn" style="width: 100%; margin-top: 1.5rem; text-align: center;">
+                        Proceed to Checkout
+                    </a>
+                    <button onclick="if(confirm('Clear all items from cart?')) { clearCart(); loadCart(); }" 
+                            class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">
+                        Clear Cart
+                    </button>
+                </div>
+            `;
+        }
+
+        // Load cart on page load
+        loadCart();
+    </script>
+</body>
+</html>
